@@ -3,32 +3,75 @@
 (define longitudY '(1189 841 594 420 297 210 148 105 74 52 37))
 (define nodoInicial '(841 1189))
 
-;Devuelve el número de cortes que hay que realizar en las dimensiones en el papel para conseguir una determinada longitud.
-;Prerequisito: la longitud a la que se quiere llegar tiene que 
+(define true? (lambda (verdad)(
+           if(false? verdad) #f #t)))
+
 (define numeroCortes (lambda (cortes dimensiones longitud) (
-           if (= (first dimensiones) longitud)
-              (cortes)
+           if(empty? dimensiones) 0
+           (
+           if (equal? (first dimensiones) longitud)
+              cortes
               (numeroCortes (+ 1 cortes) (rest dimensiones) longitud)
+           )
            )))
 
-;Comprueba si es solucion pasandole el número de cortes y el tamaño x e y del folio actual.
-(define esSolucion (lambda (cortes dimension) (
-       and (= (numeroCortes 0 longitudX (first dimension)) cortes) (= (numeroCortes 0 longitudY (second dimension)) cortes)                              
+(define getcortesY (lambda (nodo cortes n)(
+       if(equal? n 0) '()
+          (
+          if(equal? (second nodo) (first cortes))
+          (take (rest cortes) n)
+          (getcortesY nodo (rest cortes) (- n 1))
+          )
        )))
 
-(define alfabeta (lambda (cortes nodo alfa beta turnoJugador) (
-        if(esSolucion cortes nodo)         
-        (
-          ;quitar
-          #f
-        )
-        ;else
-        (
-          ;quitar
-          #f
-        )
-        )))
-  ;métdo principal que sortea quien empieza 
-(define jugar (lambda (cortes) (
-     if (= (random 2) 0) (print "Empieza el ordenador") (print "Empieza el jugador")                           
-     )))
+(define getcortesX (lambda (nodo cortes n)(
+       if(equal? n 0) '()
+          (
+          if(equal? (first nodo) (first cortes))
+          (take (rest cortes) n)
+          (getcortesX nodo (rest cortes) (- n 1))
+          )
+       )))
+;(construirSucesoresY 841 longitudY)
+(define construirSucesoresY(lambda (x sucesores)(
+         if(empty? sucesores) '()
+         (list* (list x (first sucesores)) (construirSucesoresY x (rest sucesores)))
+         )))
+(define construirSucesoresX(lambda (y sucesores)(
+         if(empty? sucesores) '()
+         (list* (list (first sucesores) y) (construirSucesoresX y (rest sucesores)))
+         )))
+(define getSucesores(lambda (nodo n)(
+         append (construirSucesoresY (first nodo) (getcortesY nodo longitudY n)) (construirSucesoresX (second nodo) (getcortesX nodo longitudX n))
+         )))
+
+
+(define solucion? (lambda (cortes dimension) (
+       and (equal? (numeroCortes 0 longitudX (first dimension)) cortes) (= (numeroCortes 0 longitudY (second dimension)) cortes)                              
+       )))
+
+(define calcularNodo (lambda (n nodo sucesores maquina)(
+       if(solucion? n nodo)
+       (
+         if(true? maquina) 1 0
+       )
+       (
+         if(true? maquina)
+         (
+           if(empty? (rest sucesores)) (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina))
+           (
+             max (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina)) (calcularNodo n nodo (rest sucesores) (not maquina))  
+           )
+         )
+         (
+           if(empty? (rest sucesores)) (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina))
+           (
+             min (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina)) (calcularNodo n nodo (rest sucesores) (not maquina)) 
+           )
+         )
+       )
+       )))
+
+(define jugar (lambda (n nodo sucesores maquina)(
+         if(solucion? nodo) #t #t
+         )))
