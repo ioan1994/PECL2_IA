@@ -80,14 +80,16 @@
           (
            if(empty? (rest sucesores)) (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina))
              (
-              max (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina)) (calcularNodo n nodo (rest sucesores) maquina)  
-                  )
+              if(= 1 (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina))) (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina))
+                (calcularNodo n nodo (rest sucesores) maquina)  
+                )
              )
           (
            if(empty? (rest sucesores)) (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina))
              (
-              min (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina)) (calcularNodo n nodo (rest sucesores) maquina) 
-                  )
+              if(= 0 (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina))) (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina))
+                (calcularNodo n nodo (rest sucesores) maquina) 
+                )
              )
           )
        )))
