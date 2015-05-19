@@ -125,7 +125,7 @@
        )))
 
 (define main 
-  (lambda (n maquina nodo nuevo)
+  (lambda (n maquina nodo)
     (
      if(solucion? n nodo) 
        (
@@ -149,7 +149,7 @@
                                ((lambda(x) 
                                   ((lambda(x) 
                                      ((lambda(x) 
-                                        (main n (not maquina) (minimax n nodo (getSucesores nodo n)) nuevo))
+                                        (main n (not maquina) (minimax n nodo (getSucesores nodo n))))
                                       (newline))) 
                                    (display (minimax n nodo (getSucesores nodo n)))))
                                 (display "El ordenador ha escojido cortar hasta tener ")))
@@ -170,7 +170,7 @@
                             ((lambda (x)
                                ((lambda (x)
                                   ((lambda (x)
-                                     (main n (not maquina) (leerNumero nuevo (getSucesores nodo n)) nuevo))
+                                     (main n (not maquina) (leerNumero x (getSucesores nodo n))))
                                    (read)))
                                 (newline)))
                              (display (getSucesores nodo n))))
@@ -186,5 +186,5 @@
 (define jugar 
   (lambda (n) 
     (
-     if (= (random 2) 0) (main n #f nodoInicial 0) (main n #t nodoInicial 0)                              
+     if (= (random 2) 0) (main n #f nodoInicial) (main n #t nodoInicial)                              
         )))
