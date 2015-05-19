@@ -3,8 +3,15 @@
 (define longitudY '(1189 841 594 420 297 210 148 105 74 52 37))
 (define nodoInicial '(841 1189))
 
+(define-values (in out) (make-pipe))
+
 (define true? (lambda (verdad)(
            if(false? verdad) #f #t)))
+
+
+;(calcularNodo 1 nodoInicial (getSucesores nodoInicial 1) #t)
+
+
 
 (define numeroCortes (lambda (cortes dimensiones longitud) (
            if(empty? dimensiones) 0
@@ -53,25 +60,94 @@
 (define calcularNodo (lambda (n nodo sucesores maquina)(
        if(solucion? n nodo)
        (
-         if(true? maquina) 1 0
+         if(true? maquina) 0 1
        )
        (
          if(true? maquina)
          (
            if(empty? (rest sucesores)) (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina))
            (
-             max (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina)) (calcularNodo n nodo (rest sucesores) (not maquina))  
+             max (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina)) (calcularNodo n nodo (rest sucesores) maquina)  
            )
          )
          (
            if(empty? (rest sucesores)) (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina))
            (
-             min (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina)) (calcularNodo n nodo (rest sucesores) (not maquina)) 
+             min (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) (not maquina)) (calcularNodo n nodo (rest sucesores) maquina) 
            )
          )
        )
        )))
 
-(define jugar (lambda (n nodo sucesores maquina)(
-         if(solucion? nodo) #t #t
+(define minimax (lambda (n nodo sucesores)(
+         if(empty? (rest sucesores)) (first sucesores)
+         (
+           if(= (calcularNodo n (first sucesores) (getSucesores (first sucesores) n) #t) 1) 
+             (first sucesores)
+             (minimax n nodo (rest sucesores))
+         )
          )))
+
+
+(define leerNumero (lambda (numero sucesores)(
+        if(number? numero)
+          (
+            if(<= numero (length sucesores))
+              (
+                if(= numero 0) (first sucesores)
+                (leerNumero (- numero 1) (rest sucesores))
+              )
+              (
+                
+                leerNumero (read) sucesores (display "El número se excede de los límites, vuelve a insertarlo...")
+              )
+          )
+          (
+            (display "El caracter introducido no es válido, vuelve a hacerlo...") 
+            (leerNumero (read) sucesores)                                                                      
+          )
+        )))
+
+
+
+(define main (lambda (n maquina nodo nuevo)(
+        if(solucion? n nodo) 
+        (
+          if(true? maquina) 
+          (
+            (display "Has ganado!")
+            (exit)
+          ) 
+          (
+            (display "Ha ganado la máquina")
+            (exit)
+          )
+        )
+        (
+          if(true? maquina)
+          (
+            (display "Turno del ordenador") (newline)
+            (display "El ordenador puede escojer") 
+            (display (getSucesores nodo n)) (newline)
+            (display "El ordenador ha escojido cortar hasta tener ")
+            (display (minimax n nodo (getSucesores nodo n))) (newline)
+            (main n (not maquina) (minimax n nodo (getSucesores nodo n)) nuevo)
+          )
+          (
+            (display "Tu turno") (newline)
+            (display "Escoger entre el 0 y el máximo de los siguientes sucesores") (newline)
+            (display (getSucesores nodo n))(newline)
+            (set! nuevo (read))
+            (main n (not maquina) (leerNumero nuevo (getSucesores nodo n)) nuevo)
+          )
+        )
+        )))
+
+(define jugar (lambda (n) (
+     if (= (random 2) 0) (main n #f nodoInicial 0) (main n #t nodoInicial 0)                              
+     )))
+
+(define test (lambda (n) (
+     (read)
+     (write (read))
+     )))
