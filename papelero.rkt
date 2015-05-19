@@ -3,14 +3,8 @@
 (define longitudY '(1189 841 594 420 297 210 148 105 74 52 37))
 (define nodoInicial '(841 1189))
 
-(define-values (in out) (make-pipe))
-
 (define true? (lambda (verdad)(
            if(false? verdad) #f #t)))
-
-
-;(calcularNodo 1 nodoInicial (getSucesores nodoInicial 1) #t)
-
 
 
 (define numeroCortes (lambda (cortes dimensiones longitud) (
@@ -39,7 +33,6 @@
           (getcortesX nodo (rest cortes) (- n 1))
           )
        )))
-;(construirSucesoresY 841 longitudY)
 (define construirSucesoresY(lambda (x sucesores)(
          if(empty? sucesores) '()
          (list* (list x (first sucesores)) (construirSucesoresY x (rest sucesores)))
@@ -115,31 +108,58 @@
         (
           if(true? maquina) 
           (
-            (display "Has ganado!")
-            (exit)
+            display "Has ganado!"
           ) 
           (
-            (display "Ha ganado la máquina")
-            (exit)
+            display "Ha ganado la máquina"
           )
         )
         (
           if(true? maquina)
-          (
-            (display "Turno del ordenador") (newline)
-            (display "El ordenador puede escojer") 
-            (display (getSucesores nodo n)) (newline)
-            (display "El ordenador ha escojido cortar hasta tener ")
-            (display (minimax n nodo (getSucesores nodo n))) (newline)
-            (main n (not maquina) (minimax n nodo (getSucesores nodo n)) nuevo)
-          )
-          (
-            (display "Tu turno") (newline)
-            (display "Escoger entre el 0 y el máximo de los siguientes sucesores") (newline)
-            (display (getSucesores nodo n))(newline)
-            (set! nuevo (read))
-            (main n (not maquina) (leerNumero nuevo (getSucesores nodo n)) nuevo)
-          )
+
+            ((lambda(x) 
+               ((lambda(x)  
+                  ((lambda(x) 
+                     ((lambda(x)  
+                        ((lambda(x) 
+                           ((lambda(x) 
+                              ((lambda(x) 
+                                 ((lambda(x) 
+                                    ((lambda(x) 
+                                       ((lambda(x) 
+                                          (main n (not maquina) (minimax n nodo (getSucesores nodo n)) nuevo))
+                                        (newline))) 
+                                     (display (minimax n nodo (getSucesores nodo n)))))
+                                  (display "El ordenador ha escojido cortar hasta tener ")))
+                               (newline)))
+                            (display (getSucesores nodo n)) ))    
+                         (display "El ordenador puede escojer")))
+                      (newline)))
+                   (display "Turno del ordenador")))
+                (newline)))
+             (display "----------------------------------------------------------"))
+            
+            ((lambda(x) 
+               ((lambda(x) 
+                  ((lambda(x) 
+                     ((lambda (x) 
+                        ((lambda (x) 
+                           ((lambda (x)
+                              ((lambda (x)
+                                 ((lambda (x)
+                                    ((lambda (x)
+                                       (main n (not maquina) (leerNumero nuevo (getSucesores nodo n)) nuevo))
+                                     (read)))
+                                  (newline)))
+                               (display (getSucesores nodo n))))
+                            (newline))) 
+                         (display "Escoger entre el 0 y el máximo de los siguientes sucesores"))) 
+                      (newline))) 
+                   (display "Tu turno")))
+                (newline))) 
+             (display "----------------------------------------------------------"))
+            
+          
         )
         )))
 
@@ -147,7 +167,6 @@
      if (= (random 2) 0) (main n #f nodoInicial 0) (main n #t nodoInicial 0)                              
      )))
 
-(define test (lambda (n) (
-     (read)
-     (write (read))
-     )))
+(define test (lambda (n) 
+     ((lambda(x) ((lambda(x) (write x)) 2))(write "ddddddddd"))
+     ))
